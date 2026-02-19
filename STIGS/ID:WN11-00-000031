@@ -1,0 +1,70 @@
+<#
+.SYNOPSIS
+    This project focused on remediating the security control WN11-00-000031, which requires Windows 11 systems to use BitLocker pre-boot authentication with a PIN.     The objective was to ensure that encrypted systems cannot be accessed without user interaction during startup, thereby strengthening protection against             unauthorized access in the event of device loss or theft.
+
+.NOTES
+    Author          : Mitchel M Kitavi
+    LinkedIn        : linkedin.com/in/mike-kitavi-6333aa218/
+    GitHub          : github.com/kitavim2-commits/MKitavi-
+    Date Created    : 2026-02-18
+    Last Modified   : 2024-02-18
+    Version         : 1.0
+    CVEs            : N/A
+    Plugin IDs      : N/A
+    STIG-ID         : WN11-00-000031
+
+.TESTED ON
+    Date(s) Tested  : 
+    Tested By       : 
+    Systems Tested  : 
+    PowerShell Ver. : 
+
+.USAGE
+    Put any usage instructions here.
+    Example syntax:
+    PS C:\> .\__remediation_template(STIG-ID-WN11-00-000031).ps1 
+#>
+
+# YOUR CODE GOES HERE# WN11-00-000031 Remediation Script
+# Enforces BitLocker TPM + PIN pre-boot authentication
+
+Write-Host "Remediating WN11-00-000031..." -ForegroundColor Cyan
+
+# Create registry path if it does not exist
+$regPath = "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
+if (!(Test-Path $regPath)) {
+    New-Item -Path $regPath -Force | Out-Null
+}
+
+# Set required registry values
+New-ItemProperty -Path $regPath -Name "UseAdvancedStartup" -PropertyType DWord -Value 1 -Force | Out-Null
+New-ItemProperty -Path $regPath -Name "UseTPMPIN" -PropertyType DWord -Value 1 -Force | Out-Null
+New-ItemProperty -Path $regPath -Name "UseTPMKeyPIN" -PropertyType DWord -Value 1 -Force | Out-Null
+
+Write-Host "Registry settings configured." -ForegroundColor Green
+
+# Force Group Policy update
+gpupdate /force | Out-Null
+
+# Check BitLocker status
+$blStatus = Get-BitLockerVolume -MountPoint "C:"
+
+if ($blStatus.VolumeStatus -ne "FullyEncrypted") {
+    Write-Host "BitLocker is not enabled on C:. Enable BitLocker before running this script." -ForegroundColor Yellow
+    exit
+}
+
+# Check if TPM + PIN protector already exists
+$protectorExists = $blStatus.KeyProtector | Where-Object {$_.KeyProtectorType -eq "TpmPin"}
+
+if ($protectorExists) {
+    Write-Host "TPM + PIN protector already exists." -ForegroundColor Green
+}
+else {
+    Write-Host "Adding TPM + PIN protector..." -ForegroundColor Cyan
+    manage-bde -protectors -add C: -TPMAndPIN
+}
+
+# Final verification
+Write-Host "Final BitLocker protector status:" -ForegroundColor Cyan
+manage-bde -status C:
