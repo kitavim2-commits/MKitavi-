@@ -1,0 +1,30 @@
+<#
+.SYNOPSIS
+    This PowerShell script enables failure auditing for Account Lockout events to ensure failed lockout attempts are logged for security monitoring and compliance..
+
+.NOTES
+    Author          : Mitchel M Kitavi
+    LinkedIn        : linkedin.com/in/mike-kitavi-6333aa218/
+    GitHub          : github.com/kitavim2-commits/MKitavi-
+    Date Created    : 2026-02-18
+    Last Modified   : 2026-02-19
+    Version         : 1.0
+    CVEs            : N/A
+    Plugin IDs      : N/A
+    STIG-ID         : WN11-AU-000054
+
+.TESTED ON
+    Date(s) Tested  : 
+    Tested By       : 
+    Systems Tested  : 
+    PowerShell Ver. : 
+
+.USAGE
+    Put any usage instructions here.
+    Example syntax:
+    PS C:\> .\__remediation_template(STIG-ID-WN11-AU-000054).ps1 
+#>
+
+#Enables and verifies failure auditing for Account Lockout events (STIG WN11-AU-000054)
+auditpol /set /subcategory:"Account Lockout" /failure:enable
+auditpol /get /subcategory:"Account Lockout"
