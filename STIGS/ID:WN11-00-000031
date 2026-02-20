@@ -25,7 +25,7 @@
     PS C:\> .\__remediation_template(STIG-ID-WN11-00-000031).ps1 
 #>
 
-# YOUR CODE GOES HERE# WN11-00-000031 Remediation Script
+# WN11-00-000031 Remediation Script
 # Enforces BitLocker TPM + PIN pre-boot authentication
 
 Write-Host "Remediating WN11-00-000031..." -ForegroundColor Cyan
