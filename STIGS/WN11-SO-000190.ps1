@@ -25,24 +25,22 @@
     PS C:\> .\__remediation_template(STIG-ID-WN11-SO-000190).ps1 
 #>
 
-# YOUR CODE GOES HERE# STIG: WN11-SO-000190
-# Disables weak Kerberos encryption (DES and RC4) and enforces AES only
+# Ensure correct key exists
+New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\Kerberos\Parameters" -Force | Out-Null
 
-$regPath = "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\Kerberos\Parameters"
+# Remove conflicting values if present
+Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\Kerberos\Parameters" `
+-Name SupportedEncryptionTypes -ErrorAction SilentlyContinue
 
-New-Item -Path $regPath -Force | Out-Null
+# Set the value Tenable checks
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\Kerberos\Parameters" `
+-Name KerberosEncryptionType -Type DWord -Value 24
 
-New-ItemProperty -Path $regPath `
-  -Name "SupportedEncryptionTypes" `
-  -PropertyType DWord `
-  -Value 24 `
-  -Force
-
-#Reboot Required
-
-Restart-Computer
+# Force policy refresh
+gpupdate /force
+shutdown /r /t 0
 
 #Verification (after reboot)
 
 Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\Kerberos\Parameters" |
-Select-Object SupportedEncryptionTypes
+Select KerberosEncryptionType, SupportedEncryptionTypes
