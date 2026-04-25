@@ -11,6 +11,7 @@ I'm passionate about cybersecurity and love tackling complex challenges through 
 ## 🚨 Threat Hunting and Security Operations
 
 - **[Threat Hunting Scenario (Tor Browser Usage)](https://github.com/kitavim2-commits/threat-hunting-scenario-tor-/tree/main)**
+- 
 - **[Windows Endpoint Detection Lab — Sysmon + Splunk SIEM](https://github.com/kitavim2-commits/windows-sysmon-splunk-siem-lab) 🆕
   > Built a fully functional endpoint detection lab using Sysmon and Splunk Enterprise. Configured native Windows process auditing (Event ID 4688), deployed Sysmon with SwiftOnSecurity config, ingested four log sources into Splunk, and validated detection of T1059.001 (PowerShell encoded command) end-to-end with Atomic Red Team simulation.
 <hr/>
