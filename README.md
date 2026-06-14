@@ -7,6 +7,7 @@ I'm passionate about cybersecurity and love tackling complex challenges through 
 
 - [Vulnerability Management Program Implementation](https://github.com/kitavim2-commits/Vulnerability-Management-Program-)
 - [Programmatic Vulnerability Remediations (PowerShell and BASH)]()
+- [CISA KEV Vulnerability Management Platform](https://github.com/MKitavi/KEV-Vulnerability-Management-Platform)
 
 ## 🚨 Threat Hunting  and Threat Hunting Labs
 
